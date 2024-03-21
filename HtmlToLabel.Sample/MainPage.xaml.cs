@@ -23,6 +23,6 @@ public partial class MainPage : ContentPage
 							<p style=""color: #FF00FF; font-size: 40px"">there here a link:</p>
 							<a target=""_blank"" href=""https://google.com"">LINK</a> Normal text here <b> text bold </b>, <u> text underline </u> <i> text italic</i>
 						</p>";
-        HtmlToLabel.Convert(pgLabel, html, true, true);
+        HtmlToLabel.Convert(pgLabel, html);
     }
 }

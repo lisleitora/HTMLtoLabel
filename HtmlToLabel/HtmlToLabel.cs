@@ -202,17 +202,21 @@ public static class HtmlToLabel
 
         public StyleContainer Clone()
         {
-            return new StyleContainer
-            {
-                BackgroundColor = this.BackgroundColor,
-                //Font = this.Font,
-                ForegroundColor = this.ForegroundColor,
-                FontAttributes = this.FontAttributes,
-                FontFamily = this.FontFamily,
-                FontSize = this.FontSize,
-                Decorations = this.Decorations,
-                TapGesture = this.TapGesture
-            };
+            var clone = new StyleContainer();
+
+            if (this.BackgroundColor != Colors.Transparent)
+                clone.BackgroundColor = this.BackgroundColor;
+
+            if (this.ForegroundColor != Colors.Black)
+                clone.ForegroundColor = this.ForegroundColor;
+
+            clone.FontAttributes = this.FontAttributes;
+            clone.FontFamily = this.FontFamily;
+            clone.FontSize = this.FontSize;
+            clone.Decorations = this.Decorations;
+            clone.TapGesture = this.TapGesture;
+
+            return clone;
         }
 
         public Span ToSpan()

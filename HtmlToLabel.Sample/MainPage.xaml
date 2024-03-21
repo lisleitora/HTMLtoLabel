@@ -8,7 +8,7 @@
             Padding="30,0"
             Spacing="25">
 
-            <Label 
+            <Label
                 HorizontalTextAlignment="Center"
                 x:Name="pgTitle" FontFamily="Arial"
                 FontSize="22">
@@ -21,7 +21,7 @@
                 SemanticProperties.Description="dot net bot in a race car number eight" />
 
             <Label
-                x:Name="pgLabel" FontFamily="Arial"
+                x:Name="pgLabel" FontFamily="Arial" TextColor="DarkBlue"
                 FontSize="22">
             </Label>
 
