@@ -13,7 +13,7 @@ namespace HtmlToLabel;
 
 public static class HtmlToLabel
 {
-    public static async void Convert(Label l, string html, bool ignoreNewLines = true)
+    public static async void Convert(Label l, string html, bool ignoreNewLines = true, bool hasStyle = true)
     {
         l.Text = "";
         FormattedString fstring = new FormattedString();
@@ -23,7 +23,7 @@ public static class HtmlToLabel
 
             XElement root = XElement.Parse(xml);
 
-            ProcessNodes(fstring, root, new StyleContainer(l), ignoreNewLines, l);
+            ProcessNodes(fstring, root, new StyleContainer(l), ignoreNewLines, l, hasStyle);
 
         }
         catch (Exception ex)
@@ -38,9 +38,8 @@ public static class HtmlToLabel
         l.FormattedText = fstring;
     }
 
-    private static void ProcessNodes(FormattedString fstring, XElement xe, StyleContainer cont, bool ignoreNewLines, Label l)
+    private static void ProcessNodes(FormattedString fstring, XElement xe, StyleContainer cont, bool ignoreNewLines, Label l, bool hasStyle)
     {
-
         foreach (var node in xe.Nodes())
         {
             var element = node as XElement;
@@ -50,38 +49,38 @@ public static class HtmlToLabel
                     if (element.Name.LocalName.ToLower() == "p")
                     {
                         var boldCont = cont.Clone();
-                        ProcessStyles(element, boldCont);
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessStyles(element, boldCont, hasStyle);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                         fstring.Spans[fstring.Spans.Count - 1].Text += Environment.NewLine;
                     }
                     else if (element.Name.LocalName.ToLower() == "a")
                     {
                         var boldCont = cont.Clone();
-                        ProcessStyles(element, boldCont);
+                        ProcessStyles(element, boldCont, hasStyle);
                         boldCont.Decorations |= TextDecorations.Underline;
                         ProcessUrl(element, boldCont);
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                     }
                     else if (element.Name.LocalName.ToLower() == "b")
                     {
                         var boldCont = cont.Clone();
                         boldCont.FontAttributes |= FontAttributes.Bold;
-                        ProcessStyles(element, boldCont);
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessStyles(element, boldCont, hasStyle);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                     }
                     else if (element.Name.LocalName.ToLower() == "i")
                     {
                         var boldCont = cont.Clone();
-                        ProcessStyles(element, boldCont);
+                        ProcessStyles(element, boldCont, hasStyle);
                         boldCont.FontAttributes |= FontAttributes.Italic;
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                     }
                     else if (element.Name.LocalName.ToLower() == "u")
                     {
                         var boldCont = cont.Clone();
-                        ProcessStyles(element, boldCont);
+                        ProcessStyles(element, boldCont, hasStyle);
                         boldCont.Decorations |= TextDecorations.Underline;
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                     }
                     else if (element.Name.LocalName.ToLower() == "br")
                     {
@@ -90,8 +89,8 @@ public static class HtmlToLabel
                     else
                     {
                         var boldCont = cont.Clone();
-                        ProcessStyles(element, boldCont);
-                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l);
+                        ProcessStyles(element, boldCont, hasStyle);
+                        ProcessNodes(fstring, element, boldCont, ignoreNewLines, l, hasStyle);
                     }
                     break;
                 case System.Xml.XmlNodeType.Text:
@@ -109,8 +108,9 @@ public static class HtmlToLabel
         }
     }
 
-    private static void ProcessStyles(XElement element, StyleContainer styleCont)
+    private static void ProcessStyles(XElement element, StyleContainer styleCont, bool hasStyle)
     {
+        if (!hasStyle) return;
         if (!element.HasAttributes) return;
         var styleStr = element.Attribute(XName.Get("style"))?.Value;
         if (string.IsNullOrEmpty(styleStr)) return;
