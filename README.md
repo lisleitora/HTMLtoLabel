@@ -1,4 +1,4 @@
-<img src="icon.png" height="200">
+<img src="HtmlToLabel/icon.png" height="200">
 
 
 
@@ -19,4 +19,4 @@ Here is my NuGet:
 ## More options
 you can Style or not and even ignore spaces between lines
 
-<img src="screen.png" height="400">
+<img src="HtmlToLabel/screen.png" height="400">
